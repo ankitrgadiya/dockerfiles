@@ -1,23 +1,36 @@
-FROM debian:latest
+FROM alpine:latest
 MAINTAINER Ankit R Gadiya <me@argp.in>
 
-
-# Install required packages
-RUN apt-get update && apt-get install -y \
+# Install packages
+RUN apk add \
+		--update \
+		--no-cache \
 		ruby \
 		ruby-dev \
-		build-essential 
-
+		ruby-json \
+		build-base \
+		libffi-dev
 
 # Install gems
-RUN gem install \
+RUN gem install --no-document \
 		jekyll \
-		bundle
+		bundler \
+		jekyll-paginate
 
 WORKDIR /source
 
-# Add script
 COPY init.sh /opt/init.sh
+COPY gemrc /root/.gemrc
+
+# Environment
+ENV GEM_HOME /usr/local/bundle
+ENV BUNDLE_PATH="$GEM_HOME" \
+	BUNDLE_BIN="$GEM_HOME/bin" \
+	BUNDLE_SILENCE_ROOT_WARNING=1 \
+	BUNDLE_APP_CONFIG="$GEM_HOME"
+ENV PATH $BUNDLE_BIN:$PATH
+RUN mkdir -p "$GEM_HOME" "$BUNDLE_BIN" \
+	&& chmod 777 "$GEM_HOME" "$BUNDLE_BIN"
 
 # Server
 EXPOSE 4000

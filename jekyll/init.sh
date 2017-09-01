@@ -1,7 +1,10 @@
-#! /bin/bash
+#! /bin/sh
 
 # Check dependencies
 bundle check || bundle install
 
 # Server
-bundle exec jekyll serve --destination /www --host 0.0.0.0 --port 4000
+bundle exec jekyll serve \
+	--destination /www \
+	--port 4000 \
+	--host 0.0.0.0
