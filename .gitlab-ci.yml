@@ -10,7 +10,7 @@ before_script:
 stages:
     - jekyll
     - gollum
-
+    - nginx
 
 build:
     stage: jekyll
@@ -27,3 +27,11 @@ build:
         - docker push $CI_REGISTRY/$CI_PROJECT_PATH/gollum
         - docker tag $CI_REGISTRY/$CI_PROJECT_PATH/gollum $HUB_USER/gollum
         - docker push $HUB_USER/gollum
+
+build:
+    stage: nginx
+    script:
+        - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH/nginx nginx/
+        - docker push $CI_REGISTRY/$CI_PROJECT_PATH/nginx
+        - docker tag $CI_REGISTRY/$CI_PROJECT_PATH/nginx $HUB_USER/nginx
+        - docker push $HUB_USER/nginx
