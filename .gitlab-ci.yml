@@ -5,21 +5,16 @@ services:
 
 before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker login -u $HUB_USER -p $HUB_PASSWORD 
+    - docker login -u $HUB_USER -p $HUB_PASSWORD
 
 build:
     script:
-        - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH/jekyll jekyll/
-        - docker push $CI_REGISTRY/$CI_PROJECT_PATH/jekyll
-        - docker tag $CI_REGISTRY/$CI_PROJECT_PATH/jekyll $HUB_USER/jekyll
-        - docker push $HUB_USER/jekyll
+        - (for each in `find . -maxdepth 1 -mindepth 1 -type d | grep -vw ".git" | sed 's@./@@'`;
+          do
+            echo "Building $each";
+            docker build -t $CI_REGISTRY/$CI_PROJECT_PATH/$each $each/;
+            docker push $CI_REGISTRY/$CI_PROJECT_PATH/$each;
+            docker tag $CI_REGISTRY/$CI_PROJECT_PATH/$each $HUB_USER/$each;
+            docker push $HUB_USER/$each;
+          done)
 
-        - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH/gollum gollum/
-        - docker push $CI_REGISTRY/$CI_PROJECT_PATH/gollum
-        - docker tag $CI_REGISTRY/$CI_PROJECT_PATH/gollum $HUB_USER/gollum
-        - docker push $HUB_USER/gollum
-
-        - docker build -t $CI_REGISTRY/$CI_PROJECT_PATH/nginx nginx/
-        - docker push $CI_REGISTRY/$CI_PROJECT_PATH/nginx
-        - docker tag $CI_REGISTRY/$CI_PROJECT_PATH/nginx $HUB_USER/nginx
-        - docker push $HUB_USER/nginx
