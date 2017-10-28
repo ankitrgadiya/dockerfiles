@@ -4,7 +4,7 @@
 # Place this file in appropriate location and then
 # source it in .bashrc to enable surge command.
 
-surge ()
+jekyll ()
 {
 	docker run \
 		--name jekyll \
