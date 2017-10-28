@@ -34,4 +34,4 @@ RUN mkdir -p "$GEM_HOME" "$BUNDLE_BIN" \
 
 # Server
 EXPOSE 4000
-CMD ["sh", "/opt/init.sh"]
+ENTRYPOINT ["/opt/init.sh"]
