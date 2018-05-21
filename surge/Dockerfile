@@ -4,8 +4,8 @@ MAINTAINER Ankit R Gadiya <me@argp.in>
 WORKDIR /www
 
 RUN apk --update --no-cache add \
-		nodejs-current \
-		nodejs-current-npm \
+		nodejs \
+		nodejs-npm \
 	&& npm install --global surge
 
 COPY init.sh /opt/init.sh
